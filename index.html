@@ -1,0 +1,40 @@
+
+<!DOCTYPE html>
+<html lang="pt">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Salvar contato | Gil Ferreira</title>
+</head>
+<body>
+  <p>Preparando contato de Gil Ferreira...</p>
+  <button id="download">Salvar contato</button>
+
+  <script>
+    async function baixarContato() {
+      const resposta = await fetch("./Gil_Ferreira.vcf");
+      if (!resposta.ok) throw new Error("Arquivo indisponível");
+
+      const conteudo = await resposta.blob();
+      const arquivo = new Blob([conteudo], {
+        type: "text/vcard;charset=utf-8"
+      });
+
+      const url = URL.createObjectURL(arquivo);
+      const link = document.createElement("a");
+      link.href = url;
+      link.download = "Gil_Ferreira.vcf";
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+
+      setTimeout(() => URL.revokeObjectURL(url), 10000);
+    }
+
+    document.getElementById("download")
+      .addEventListener("click", baixarContato);
+
+    baixarContato().catch(console.error);
+  </script>
+</body>
+</html>
